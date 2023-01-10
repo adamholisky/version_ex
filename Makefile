@@ -130,6 +130,7 @@ install_stage2: build/versionv_ex.bin
 
 run: install
 	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) 
+	@echo "beep boop"
 
 run_debug: install
 	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) $(QEMU_DEBUG_COMMON)
@@ -141,7 +142,13 @@ run_ng_debug: install
 	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NONE) $(QEMU_DEBUG_COMMON)
 
 gdb:
-	gdb -q --command=/usr/local/osdev/versions/v/kernel/build_support/main_debug.gdb 
+	gnome-terminal -x gdb -q --command=/usr/local/osdev/versions/ex/build_support/gdb_commands.gdb
+	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) $(QEMU_DEBUG_COMMON)
+
+run_gdbgui: install
+	gdbgui --gdb-cmd="gdb -q --command=/usr/local/osdev/versions/ex/build_support/gdbgui_commands.gdb"&
+	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) $(QEMU_DEBUG_COMMON)
+	@killall gdbgui
 
 clean:
 	@rm -rf build.log
@@ -163,6 +170,9 @@ create_img_stage_2:
 	@sudo umount $(MOUNT_DIR)
 	@sudo /usr/local/osdev/share/limine/limine-deploy $(LOOP_DRIVE)
 	@sudo losetup -d $(LOOP_DRIVE)
+
+setup_gdbui:
+	pipx install gdbgui
 
 clean_stage_2:
 	rm -rf build/*.o 
