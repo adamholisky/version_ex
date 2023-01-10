@@ -1,0 +1,6 @@
+build/*
+build.log
+elfdump.txt
+objdump.txt
+serial_out.txt 
+vv_ex.img
