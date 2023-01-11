@@ -19,7 +19,14 @@ ASM = /usr/local/osdev/bin/x86_64-elf-as
 DEFINES = -DPAGING_PAE \
 		  -DGRAPHICS_OFF \
 		  -DBITS_32
-CFLAGS = $(DEFINES) -Wno-write-strings -ffreestanding -fno-omit-frame-pointer -O0 -g -I$(ROOT_DIR)/kernel/include -I$(ROOT_DIR)/libcvv/libc/include \
+CFLAGS = $(DEFINES) 
+	-Wno-write-strings \
+	-ffreestanding \
+	-fno-omit-frame-pointer \
+	-O0 \
+	-g \
+	-I$(ROOT_DIR)/kernel/include \
+	-I$(ROOT_DIR)/libcvv/libc/include \
 	-std=c11             \
     -ffreestanding       \
     -fno-stack-protector \
@@ -145,7 +152,8 @@ gdb:
 	gdbtui -q --command=/usr/local/osdev/versions/ex/build_support/gdb_commands.gdb
 
 gdb_terminal:
-	gnome-terminal -x gdb -q --command=/usr/local/osdev/versions/ex/build_support/gdb_commands.gdb
+	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) $(QEMU_DEBUG_COMMON) &
+	gnome-terminal --geometry=200x50+100+100 -- gdb -q --command=/usr/local/osdev/versions/ex/build_support/gdb_commands.gdb
 
 run_gdbgui: install
 	gdbgui --gdb-cmd="gdb -q --command=/usr/local/osdev/versions/ex/build_support/gdbgui_commands.gdb"&
