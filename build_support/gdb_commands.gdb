@@ -1,3 +1,4 @@
+#./configure --prefix=/usr/local/osdev --enable-tui
 set disassembly-flavor att
 
 tui enable
@@ -7,8 +8,8 @@ layout main
 winheight src -5 
 focus cmd
 
-file /usr/local/osdev/versions/v/build/versionv.bin
-directory /usr/local/osdev/versions/v/kernel
+file /usr/local/osdev/versions/ex/build/versionv_ex.bin
+directory /usr/local/osdev/versions/ex/kernel
 
 define qq
   set confirm off

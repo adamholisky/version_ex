@@ -142,8 +142,10 @@ run_ng_debug: install
 	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NONE) $(QEMU_DEBUG_COMMON)
 
 gdb:
+	gdbtui -q --command=/usr/local/osdev/versions/ex/build_support/gdb_commands.gdb
+
+gdb_terminal:
 	gnome-terminal -x gdb -q --command=/usr/local/osdev/versions/ex/build_support/gdb_commands.gdb
-	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) $(QEMU_DEBUG_COMMON)
 
 run_gdbgui: install
 	gdbgui --gdb-cmd="gdb -q --command=/usr/local/osdev/versions/ex/build_support/gdbgui_commands.gdb"&
