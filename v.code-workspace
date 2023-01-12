@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../v"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../libcvv"
+		}
+	],
+	"settings": {}
+}
