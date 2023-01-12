@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stddef.h>
+#include <string.h>
 #include "bootstrap.h"
 
 static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg) 
@@ -10,14 +11,6 @@ static inline uint8_t vga_entry_color(enum vga_color fg, enum vga_color bg)
 static inline uint16_t vga_entry(unsigned char uc, uint8_t color) 
 {
 	return (uint16_t) uc | (uint16_t) color << 8;
-}
- 
-size_t strlen(const char* str) 
-{
-	size_t len = 0;
-	while (str[len])
-		len++;
-	return len;
 }
  
 static const size_t VGA_WIDTH = 80;
@@ -33,7 +26,7 @@ void terminal_initialize(void)
 	terminal_row = 0;
 	terminal_column = 0;
 	terminal_color = vga_entry_color( VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK );
-    terminal_buffer = (uint16_t *)0xb8000;
+    terminal_buffer = (uint16_t *)0xffff8000fd000000;
 	for (size_t y = 0; y < VGA_HEIGHT; y++) {
 		for (size_t x = 0; x < VGA_WIDTH; x++) {
 			const size_t index = y * VGA_WIDTH + x;
@@ -72,4 +65,16 @@ void terminal_write(const char* data, size_t size)
 void terminal_writestring(const char* data) 
 {
 	terminal_write(data, strlen(data));
+}
+
+void kfree( void *p ) {
+
+}
+
+void * kmalloc( size_t size ) {
+
+}
+
+void term_put_char( char c ) {
+
 }

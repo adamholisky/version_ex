@@ -12,6 +12,11 @@ static volatile struct limine_terminal_request terminal_request = {
     .revision = 0
 };
 
+static volatile struct limine_framebuffer_request fb_request = {
+    .id = LIMINE_FRAMEBUFFER_REQUEST,
+    .revision = 0
+};
+
 static void done(void) {
     for (;;) {
         __asm__("hlt");
@@ -36,6 +41,7 @@ void _start(void) {
 
     terminal_request.response->write(terminal, "Hello World, completely automate!!", 34);
 
+    //struct limine_framebuffer *fb = fb_request.response->framebuffers[0];
 
     // We're done, just hang...
     done();

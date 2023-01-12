@@ -19,14 +19,14 @@ ASM = /usr/local/osdev/bin/x86_64-elf-as
 DEFINES = -DPAGING_PAE \
 		  -DGRAPHICS_OFF \
 		  -DBITS_32
-CFLAGS = $(DEFINES) 
+CFLAGS = $(DEFINES) \
 	-Wno-write-strings \
 	-ffreestanding \
 	-fno-omit-frame-pointer \
 	-O0 \
 	-g \
 	-I$(ROOT_DIR)/kernel/include \
-	-I$(ROOT_DIR)/libcvv/libc/include \
+	-I$(ROOT_DIR)/../libcvv/libc/include \
 	-std=c11             \
     -ffreestanding       \
     -fno-stack-protector \
@@ -76,7 +76,7 @@ export
 all: debug_dump install
 
 build/versionv_ex.bin: $(SOURCES_C) $(SOURCES_ASM) $(SOURCES_ASMS) $(OBJECTS_C) $(OBJECTS_ASM) $(OBJECTS_ASMS)
-	$(LD) -nostdlib -static -m elf_x86_64 -z max-page-size=0x1000 -T kernel/linker.ld -o build/versionv_ex.bin $(OBJECTS_C) $(OBJECTS_ASM) $(OBJECTS_ASMS)
+	$(LD) -nostdlib -static -m elf_x86_64 -z max-page-size=0x1000 -T kernel/linker.ld -o build/versionv_ex.bin ../libcvv/vvlibc.o $(OBJECTS_C) $(OBJECTS_ASM) $(OBJECTS_ASMS)
 	$(OBJDUMP) -x -D -S build/versionv_ex.bin > objdump.txt
 	readelf -a build/versionv_ex.bin > elfdump.txt
 	@>&2 printf "[Build] Done\n"
@@ -132,6 +132,7 @@ install_stage2: build/versionv_ex.bin
 	@sudo losetup -fP $(MOUNT_IMG)
 	@sudo mount $(LOOP_DRIVE)p1 $(MOUNT_DIR)
 	@sudo cp build/versionv_ex.bin -f $(MOUNT_DIR)/versionv_ex.bin
+	@sudo cp boot_files/limine.cfg -f $(MOUNT_DIR)/limine.cfg
 	@sudo umount $(MOUNT_DIR) 
 	@sudo losetup -d $(LOOP_DRIVE)
 
