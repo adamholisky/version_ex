@@ -23,7 +23,7 @@ SECTIONS
     . = 0xffffffff80000000;
 
     .text : {
-        *(.text .text.*)
+        *(.text)
     } :text
 
     /* Move to the next memory page for .rodata */

@@ -41,6 +41,6 @@ end
 #break *0x0010aaaa
 #break debug.cpp:30
 #break debug.cpp:39
-break kernel.c:31
+break kernel.c:48
 
 target remote localhost:5894

@@ -19,7 +19,7 @@ ASM = /usr/local/osdev/bin/x86_64-elf-as
 DEFINES = -DPAGING_PAE \
 		  -DGRAPHICS_OFF \
 		  -DBITS_32
-CFLAGS = $(DEFINES) \
+CFLAGS = \
 	-Wno-write-strings \
 	-ffreestanding \
 	-fno-omit-frame-pointer \
@@ -32,21 +32,19 @@ CFLAGS = $(DEFINES) \
     -fno-stack-protector \
     -fno-stack-check     \
     -fno-lto             \
-    -fno-pie             \
-    -fno-pic             \
     -m64                 \
     -march=x86-64        \
     -mabi=sysv           \
-    -mno-80387           \
-    -mno-mmx             \
-    -mno-sse             \
-    -mno-sse2            \
     -mno-red-zone        \
     -mcmodel=kernel      \
     -MMD                 \
 	-I
 CFLAGS_END = -nostdlib -lgcc
-AFLAGS = $(CFLAGS)
+AFLAGS = \
+	-O0 \
+	-g \
+	-I$(ROOT_DIR)/kernel/include \
+	-I$(ROOT_DIR)/../libcvv/libc/include 
 
 #Support program and flags
 OBJDUMP = /usr/local/osdev/bin/x86_64-elf-objdump
@@ -55,10 +53,10 @@ QEMU_COMMON = 	-drive format=raw,if=ide,file=$(ROOT_DIR)/vv_ex.img \
 				-device isa-debug-exit,iobase=0xf4,iosize=0x04 \
 				-nic user,ipv6=off,model=e1000,mac=52:54:98:76:54:32 \
 				-m 4G \
-				-serial null \
 				-serial stdio \
 				-serial null \
-				-serial file:$(ROOT_DIR)/serial_out.txt \
+				-serial null \
+				-serial null \
 				-no-reboot
 QEMU_DISPLAY_NONE =	-display none
 QEMU_DISPLAY_NORMAL = -vga std
@@ -95,7 +93,7 @@ build/%.o: %.s
 build/%.o: %.S
 	@>&2 printf "[Build] $<\n"
 	$(eval OBJNAME := $(shell basename $@))
-	$(CC) $(AFLAGS) $(CFLAGS_END) -c $< -o build/$(OBJNAME) >> $(BUILD_LOG)
+	$(CC) $(AFLAGS) -c $< -o build/$(OBJNAME) >> $(BUILD_LOG)
 
 debug_dump:
 	@>&2 echo [Build] Makefile Debug Dump
@@ -138,7 +136,6 @@ install_stage2: build/versionv_ex.bin
 
 run: install
 	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) 
-	@echo "beep boop"
 
 run_debug: install
 	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) $(QEMU_DEBUG_COMMON)

@@ -1,31 +1,63 @@
 #ifndef vvos_bootstrap
 #define vvos_bootstrap
 
-enum vga_color {
-	VGA_COLOR_BLACK = 0,
-	VGA_COLOR_BLUE = 1,
-	VGA_COLOR_GREEN = 2,
-	VGA_COLOR_CYAN = 3,
-	VGA_COLOR_RED = 4,
-	VGA_COLOR_MAGENTA = 5,
-	VGA_COLOR_BROWN = 6,
-	VGA_COLOR_LIGHT_GREY = 7,
-	VGA_COLOR_DARK_GREY = 8,
-	VGA_COLOR_LIGHT_BLUE = 9,
-	VGA_COLOR_LIGHT_GREEN = 10,
-	VGA_COLOR_LIGHT_CYAN = 11,
-	VGA_COLOR_LIGHT_RED = 12,
-	VGA_COLOR_LIGHT_MAGENTA = 13,
-	VGA_COLOR_LIGHT_BROWN = 14,
-	VGA_COLOR_WHITE = 15,
-};
+#include <stdint.h>
+#include <stddef.h>
+#include <stdio.h>
 
-void terminal_initialize( void );
-void terminal_setcolor( uint8_t color );
-void terminal_putentryat(char c, uint8_t color, size_t x, size_t y);
-void terminal_putchar(char c);
-void terminal_write(const char* data, size_t size);
-void terminal_writestring(const char* data);
+/* Outputs a byte to the specified hardware port */
+static inline void outportb( uint32_t port, uint8_t value ) {
+    __asm__ __volatile__ ("outb %%al,%%dx"::"d" (port), "a" (value));
+}
+
+/* Outputs a word to a port */
+static inline void outportw( uint32_t port, uint32_t value ) {
+    __asm__ __volatile__ ("outw %%ax,%%dx"::"d" (port), "a" (value));
+}
+
+/* gets a byte from a port */
+static inline uint8_t inportb( uint32_t port ) {
+    uint8_t value;
+    __asm__ __volatile__ ("inb %w1,%b0" : "=a"(value) : "d"(port));
+    return value;
+}
+
+static inline uint8_t inportw( uint32_t port ) {
+    uint8_t value;
+    __asm__ __volatile__ ("inw %%dx,%%ax" : "=a"(value) : "d"(port));
+    return value;
+}
+
+static inline void out_port_long( uint16_t port, uint32_t value) {
+    __asm__ __volatile__ ( "outl %%eax, %%dx" : : "d" (port), "a" (value) );
+}
+
+static inline uint32_t in_port_long( uint16_t port ) {
+    uint32_t value;
+    __asm__ __volatile__ ("inl %%dx, %%eax" : "=a"(value) : "dN"(port));
+    return value;
+}
+
+#define set_bit(x,b) x | 1<<b
+#define clear_bit(x,b) x ~ 1<<b 
+#define flip_bit(x,b) x ^ 1<<b
+#define test_bit(x,b) x & 1<<b
+#define do_immediate_shutdown() outportb( 0xF4, 0x00 )
+
+#define debugf( ... ) printf( __VA_ARGS__ )
+#define log_entry_enter() debugf( "Enter\n" )
+#define log_entry_exit() debugf( "Exit\n" );
+
+#define dbA() debugf( "A" )
+#define dbB() debugf( "B" )
+#define dbC() debugf( "C" )
+#define dbD() debugf( "D" )
+#define dbE() debugf( "E" )
+#define db1() debugf( "1" )
+#define db2() debugf( "2" )
+#define db3() debugf( "3" )
+#define db4() debugf( "4" )
+#define db5() debugf( "5" )
 
 // Needed libc hooks
 void kfree( void *p );
