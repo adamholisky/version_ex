@@ -59,9 +59,12 @@ static inline uint32_t in_port_long( uint16_t port ) {
 #define db4() debugf( "4" )
 #define db5() debugf( "5" )
 
+extern void sse_initalize( void );
+
 // Needed libc hooks
 void kfree( void *p );
 void * kmalloc( size_t size );
 void term_put_char( char c );
+void hang( void );
 
 #endif

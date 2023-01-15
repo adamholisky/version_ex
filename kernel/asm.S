@@ -7,9 +7,9 @@ General assembly helper routines
 #define CR4_SSE_EXCP (1 << 10)
 
 .section .text
-.global enable_sse
-.type enable_sse, @function
-enable_sse:
+.global sse_initalize
+.type sse_initalize, @function
+sse_initalize:
 	xor %rax, %rax
 	mov %cr0, %rax
 	and $(~CR0_FPU_EM), %rax

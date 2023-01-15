@@ -15,3 +15,9 @@ void * kmalloc( size_t size ) {
 void term_put_char( char c ) {
 	serial_write( c );
 }
+
+void hang( void ) {
+	for (;;) {
+		__asm__("hlt");
+	}
+}
