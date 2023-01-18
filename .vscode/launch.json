@@ -5,14 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug",
-            "type": "gdb",
-            "executable": "/usr/local/osdev/versions/ex/build/versionv_ex.bin",
-            "request": "attach",
-            "target": "localhost:5894",
-            "remote": true,
-            "cwd": "${workspaceRoot}",
-            "valuesFormatting": "parseText"
+            "name": "Debug w/Run",
+            "type": "cppdbg",
+            "request": "launch",
+            "miDebuggerServerAddress": "localhost:5894",
+            "cwd": "/usr/local/osdev/versions/ex",
+            "program": "/usr/local/osdev/versions/ex/build/versionv_ex.bin",
+            "MIMode": "gdb",
+            "preLaunchTask": "Run Debug Normal"
         }
+
     ]
 }

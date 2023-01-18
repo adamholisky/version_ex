@@ -1,0 +1,25 @@
+Old launch config:
+
+ {
+            "name": "Debug Main",
+            "type": "gdb",
+            "executable": "/usr/local/osdev/versions/ex/build/versionv_ex.bin",
+            "request": "attach",
+            "target": "localhost:5894",
+            "remote": true,
+            "cwd": "${workspaceRoot}",
+            "valuesFormatting": "parseText",
+            "debugger_args": ["--command=/usr/local/osdev/versions/ex/build_support/vscode.gdb"]
+        }
+
+
+        {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }

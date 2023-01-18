@@ -36,13 +36,13 @@ void graphics_initalize( void ) {
 	char_width = 7;
 	screen_border = 10;
 
-	bg_color = 0x00262A30;
+	bg_color = 0x00FFFFFF;
 	fg_color = 0x00000000;
 	render_background = true;
 
 	bg_mask = mask;
 
-	fillrect( graphics_info.buffer, 0x00262A30, 0, 0, 1024, 768 );
+	fillrect( graphics_info.buffer, bg_color, 0, 0, 1024, 768 );
 	vga_draw_screen();
 }
 
@@ -134,6 +134,7 @@ void vga_move_line( unsigned int dest_y, unsigned int src_y ) {
 
 void vga_put_char( unsigned char c, unsigned int x, unsigned int y ) {
 	draw_char( graphics_info.buffer, screen_border + (x * char_width), screen_border + (y * char_height), graphics_info.fg_color, graphics_info.bg_color, c );
+
 }
 
 

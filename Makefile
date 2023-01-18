@@ -131,6 +131,7 @@ install_stage2: build/versionv_ex.bin
 	@sudo mount $(LOOP_DRIVE)p1 $(MOUNT_DIR)
 	@sudo cp build/versionv_ex.bin -f $(MOUNT_DIR)/versionv_ex.bin
 	@sudo cp boot_files/limine.cfg -f $(MOUNT_DIR)/limine.cfg
+	@sudo cp boot_files/freesans.sfn -f $(MOUNT_DIR)/freesans.sfn
 	@sudo umount $(MOUNT_DIR) 
 	@sudo losetup -d $(LOOP_DRIVE)
 
@@ -138,7 +139,7 @@ run: install
 	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) 
 
 run_debug: install
-	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) $(QEMU_DEBUG_COMMON)
+	gnome-terminal -- $(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) $(QEMU_DEBUG_COMMON)
 
 run_ng: install
 	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NONE) && echo "Exit Code: $$?" || echo "Exit Code: $$?"
