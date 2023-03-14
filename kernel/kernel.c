@@ -11,6 +11,7 @@
 
 #define GRAPHICS_TEST true
 #define LIMINE_MODULE_REQUEST { LIMINE_COMMON_MAGIC, 0x3e7e279702be32af, 0xca1c4f3bd1280cee }
+#define LIMINE_MEMMAP_REQUEST { LIMINE_COMMON_MAGIC, 0x67cf3d9d378a806f, 0xe304acdfc50c3c62 }
 
 
 static volatile struct limine_framebuffer_request fb_request = {
@@ -20,6 +21,11 @@ static volatile struct limine_framebuffer_request fb_request = {
 
 static volatile struct limine_module_request mod_request = {
     .id = LIMINE_MODULE_REQUEST,
+	.revision = 0
+};
+
+static volatile struct limine_memmap_request memmap_request = {
+	.id = LIMINE_MEMMAP_REQUEST,
 	.revision = 0
 };
 
@@ -39,8 +45,25 @@ void kernel_main(void) {
 	g->pixel_width = g->pitch / g->width;
 	g->fbuffer = fb->address;
 
-	printf( "    Screen Height: %d\n", fb->height );
-	printf( "    Screen Width: %d\n", fb->width );
+	printf( "Screen Height: %d\n", fb->height );
+	printf( "Screen Width: %d\n", fb->width );
+
+	struct limine_memmap_entry **memmap = memmap_request.response->entries;
+	int num_map_entries = memmap_request.response->entry_count;
+
+	printf( "Memmap Entries: %d\n", num_map_entries );
+
+	for( int x = 0; x < num_map_entries; x++ ) {
+		printf( "Entry %d\n", x );
+		printf( "    Base:   0x%X\n", memmap[x]->base );
+		printf( "    Length: 0x%X\n", memmap[x]->length );
+		printf( "    Type:   %d\n", memmap[x]->type );
+	}
+
+	uint64_t *pt = 0x00000000bff60000;
+	for( int z = 0; z < 4; z++ ) {
+		printf( "PT %d: %lX\n", z, *(pt + z) );
+	}
 
 	graphics_initalize();
 
@@ -66,9 +89,12 @@ void kernel_main(void) {
 			.fg = 0x000000                                /* foreground color */
 		};
 
+		printf( "ctx = 0x%X\n", &ctx );
+		printf( "buf = 0x%X\n", &buf );
+
 		/* add one or more fonts to the context. Fonts must be already in memory */
-		int i = ssfn_load(&ctx, mod->address );          /* you can add different styles... */
-		printf( "i = %d\n", i );
+		int i = ssfn_load(&ctx, font );          /* you can add different styles... */
+		//printf( "i = %d\n", i );
 
 		/* select the typeface to use */
 		ssfn_select(&ctx,
@@ -81,7 +107,7 @@ void kernel_main(void) {
 		/* returns how many bytes were consumed from the string */
 		ssfn_render(&ctx, &buf, "Hello, world");
 
-		printf( "Exiting normally.\n" );
+		//printf( "Exiting normally.\n" );
 
 		hang();
 	}	

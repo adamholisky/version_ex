@@ -136,7 +136,7 @@ install_stage2: build/versionv_ex.bin
 	@sudo losetup -d $(LOOP_DRIVE)
 
 run: install
-	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) 
+	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) $(QEMU_DEBUG_LOGGING)
 
 run_debug: install
 	gnome-terminal -- $(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) $(QEMU_DEBUG_COMMON)
@@ -151,7 +151,7 @@ gdb:
 	gdbtui -q --command=/usr/local/osdev/versions/ex/build_support/gdb_commands.gdb
 
 gdb_terminal:
-	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) $(QEMU_DEBUG_COMMON) &
+	$(QEMU) $(QEMU_COMMON) $(QEMU_DISPLAY_NORMAL) $(QEMU_DEBUG_COMMON) $(QEMU_DEBUG_LOGGING) &
 	gnome-terminal --geometry=200x50+100+100 -- gdb -q --command=/usr/local/osdev/versions/ex/build_support/gdb_commands.gdb
 
 run_gdbgui: install
